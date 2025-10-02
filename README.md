@@ -1,2 +1,2 @@
-# lm-investigation
-DS 5500 - Data Science Capstone Project: Language Model Investigation
+# Language Model Investigation
+DS 5500 - Data Science Capstone Project
