@@ -14,7 +14,7 @@ def _():
 
 @app.cell
 def _(Corpus):
-    corpus = Corpus("/home/shonenash/.convokit/saved-corpora/subreddit-Cornell")
+    corpus = Corpus("/home/shonenash/.convokit/saved-corpora/subreddit-AmItheAsshole")
     corpus.print_summary_stats()
     utt_df = corpus.get_utterances_dataframe()
     return corpus, utt_df

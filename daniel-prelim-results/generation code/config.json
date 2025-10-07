@@ -1,0 +1,35 @@
+{
+  "ollama": {
+    "base_url": "http://localhost:11434",
+    "timeout": 120,
+    "max_retries": 3,
+    "models": {
+      "gemma": "gemma3:4b",
+      "mistral": "dolphin-mistral:latest"
+    },
+    "generation_options": {
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "max_tokens": 500
+    }
+  },
+  "dataset": {
+    "default_subreddit": "subreddit-AmItheAsshole",
+    "max_posts": 10000,
+    "min_post_length": 10,
+    "min_response_length": 5,
+    "max_post_length": 1000,
+    "max_response_length": 1500,
+    "max_human_responses": 3
+  },
+  "processing": {
+    "batch_size": 50,
+    "progress_interval": 10,
+    "save_intermediate": true
+  },
+  "logging": {
+    "level": "INFO",
+    "file": "dataset_augmentation.log",
+    "format": "%(asctime)s - %(levelname)s - %(message)s"
+  }
+}
