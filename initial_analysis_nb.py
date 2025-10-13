@@ -55,7 +55,6 @@ def _():
     def apply_preprocess(doc, min_word_len=3):
         doc = char_level_preprocess(doc)
         return " ".join([word for word in doc.split() if len(word) >= min_word_len])
-
     return (apply_preprocess,)
 
 
@@ -85,7 +84,7 @@ def _(mo):
 
 @app.cell
 def _(pd):
-    ai_df = pd.read_csv("./cornell_ai_responses.csv")
+    ai_df = pd.read_csv("../cornell_ai_responses.csv")
     ai_df.columns
     return (ai_df,)
 
@@ -151,8 +150,8 @@ def _(post_human_sim):
     plt.xlabel("Cosine similarity")
     plt.ylabel("# of Reddit posts")
     plt.title("Cosine similarity between human comments and Reddit posts")
-    # plt.show()
-    plt.savefig("image_1.png", dpi=300)
+    plt.show()
+    # plt.savefig("image_1.png", dpi=300)
     return WordCloud, plt
 
 
@@ -162,8 +161,8 @@ def _(plt, post_ai_sim):
     plt.xlabel("Cosine similarity")
     plt.ylabel("# of Reddit posts")
     plt.title("Cosine similarity between AI comments and Reddit posts")
-    # plt.show()
-    plt.savefig("image_2.png", dpi=300)
+    plt.show()
+    # plt.savefig("image_2.png", dpi=300)
     return
 
 
