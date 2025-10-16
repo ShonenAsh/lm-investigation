@@ -303,9 +303,9 @@ def main():
     RESPONSES_PER_MODEL = 1  # Number of responses per model per post
     
     # File paths
-    posts_file = "daniel-prelim-results\AITAposts.csv"
-    responses_file = "daniel-prelim-results\AITAresponses.csv"
-    output_file = "augmented_data.csv"
+    posts_file = "daniel-prelim-results\datasets\AITAposts.csv"
+    responses_file = "daniel-prelim-results\datasets\AITAresponses.csv"
+    output_file = "daniel-prelim-results\datasets\AITA_ai_smalldataset.csv"
     ollama_url = "http://localhost:11434"
     
     try:
