@@ -1,10 +1,11 @@
-import pandas
+import pandas as pd
 import textstat
 import math
 import matplotlib.pyplot as plt
 import numpy as np
+import seaborn as sns
 
-data = pandas.read_csv('lm-investigation\daniel-prelim-results\datasets\AITA_ai_smalldataset.csv')
+data = pd.read_csv('.\lm-investigation\daniel-prelim-results\datasets\AITA_ai_smalldataset.csv')
 
 ## Both formulas here use average sentence length and average syllable count of a word as the difficulty parameters, with scaling modified for different contexts.
 
@@ -36,26 +37,40 @@ grade_levels = [flesch_kincaid_avgs['human_avg'],
                 flesch_kincaid_avgs['dolphin_avg'],
                 flesch_kincaid_avgs['gemma_avg']]
 
-# Set up the figure and axis
-fig, ax = plt.subplots(figsize=(10, 6))
+# Set the seaborn style to match other visualizations
+plt.style.use('seaborn-v0_8-whitegrid')
 
-# Plot bars
-bars = ax.bar(author_types, grade_levels, width=0.6, color=['#3498db', '#2ecc71', '#e74c3c'])
+# Create a DataFrame for seaborn
+plot_data = pd.DataFrame({
+    'Author Type': author_types,
+    'Grade Level': grade_levels
+})
+
+# Set up the figure and axis
+plt.figure(figsize=(12, 8))
+
+# Define colors to match other visualizations
+color_map = {'Human': 'skyblue', 'Dolphin-Mistral': 'coral', 'Gemma3_4b': 'lightgreen'}
+colors = [color_map[author] for author in author_types]
+
+# Create the bar plot with seaborn
+bars = sns.barplot(x='Author Type', y='Grade Level', data=plot_data, palette=colors,
+                  edgecolor='black', linewidth=0.5, alpha=0.8)
 
 # Add data labels on top of bars
-for bar in bars:
+for i, bar in enumerate(bars.patches):
     height = bar.get_height()
-    ax.text(bar.get_x() + bar.get_width()/2., height + 0.1,
-            f'{height:.2f}', ha='center', va='bottom')
+    plt.text(bar.get_x() + bar.get_width()/2., height + 0.1,
+            f'{height:.2f}', ha='center', va='bottom', fontsize=11)
 
 # Add labels, title, and customize appearance
-ax.set_xlabel('Author Type', fontsize=12)
-ax.set_ylabel('Grade Level', fontsize=12)
-ax.set_title('Average Grade Levels by Author Type for AITA Posts', fontsize=14, fontweight='bold')
-ax.set_ylim(bottom=0)  # Ensure y-axis starts at 0
-ax.grid(axis='y', linestyle='--', alpha=0.7)
+plt.xlabel('Author Type', fontsize=12)
+plt.ylabel('Grade Level', fontsize=12)
+plt.title('Average Grade Levels by Author Type for AITA Posts', fontsize=14, fontweight='bold')
+plt.ylim(bottom=0)  # Ensure y-axis starts at 0
+plt.grid(axis='y', linestyle='--', alpha=0.3)
 
 # Save the figure
 plt.tight_layout()
-plt.savefig('lm-investigation/daniel-prelim-results/readability_scores/grade_levels_by_author.png')
+plt.savefig('lm-investigation/daniel-prelim-results/readability_scores/grade_levels_by_author.png', dpi=300, bbox_inches='tight')
 plt.show()
