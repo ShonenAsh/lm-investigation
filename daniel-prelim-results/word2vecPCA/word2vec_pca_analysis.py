@@ -19,7 +19,7 @@ plt.style.use('seaborn-v0_8-whitegrid')
 # LOAD DATA
 # ============================================================================
 print("Loading dataset...")
-df = pd.read_csv("../datasets/AITA_ai_smalldataset.csv")
+df = pd.read_csv("lm-investigation/daniel-prelim-results/datasets/AITA_ai_smalldataset.csv")
 print(f"Dataset shape: {df.shape}")
 print(f"\nLabel distribution:\n{df['Label'].value_counts()}\n")
 
@@ -111,7 +111,7 @@ print("Generating Linear PCA visualization...")
 color_map = {'Human': 'skyblue', 'Dolphin-Mistral': 'coral', 'Gemma3_4b': 'lightgreen'}
 colors = df['Label'].map(color_map)
 
-plt.figure(figsize=(12, 8))
+plt.figure(figsize=(16, 12))
 scatter = plt.scatter(pca_linear_result[:, 0], pca_linear_result[:, 1], 
                      c=colors, alpha=0.6, edgecolors='black', linewidth=0.5, s=50)
 
