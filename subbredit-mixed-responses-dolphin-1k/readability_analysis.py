@@ -31,15 +31,16 @@ print(f"Min: {df['fk_grade'].min():.2f}, Max: {df['fk_grade'].max():.2f}\n")
 
 # Histogram
 print("Generating histogram...")
-plt.figure(figsize=(12, 8))
+plt.figure(figsize=(16, 12))
 plt.hist(df['fk_grade'], bins=30, color='skyblue', ec='darkblue', lw=0.5, alpha=0.8)
-plt.xlabel('Grade Level', fontsize=12)
-plt.ylabel('Number of Responses', fontsize=12)
+plt.xlabel('Grade Level', fontsize=24)
+plt.ylabel('Number of Responses', fontsize=24)
 plt.title('Flesch-Kincaid Grade Level Distribution\nDolphin-Mistral AI Responses', 
-          fontsize=14, fontweight='bold')
+          fontsize=32, fontweight='bold')
 plt.axvline(df['fk_grade'].mean(), color='red', linestyle='--', linewidth=2, 
             label=f"Mean: {df['fk_grade'].mean():.2f}")
-plt.legend(fontsize=11)
+plt.legend(fontsize=20)
+plt.tick_params(axis='both', labelsize=20)
 plt.grid(axis='y', alpha=0.3)
 plt.tight_layout()
 plt.savefig('flesch_kincaid_histogram.png', dpi=300, bbox_inches='tight')

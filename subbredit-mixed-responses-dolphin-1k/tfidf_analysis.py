@@ -93,9 +93,9 @@ print("\n")
 print("Creating top 20 terms table visualization...")
 top_20 = tfidf_scores_df.head(20)
 
-fig, ax = plt.subplots(figsize=(10, 10))
+fig, ax = plt.subplots(figsize=(16, 12))
 ax.axis('off')
-fig.suptitle('Top 20 Terms by Summed TF-IDF Score', fontsize=16, fontweight='bold', y=0.98)
+fig.suptitle('Top 20 Terms by Summed TF-IDF Score', fontsize=32, fontweight='bold', y=0.98)
 
 table_data = [[f"{i+1}", term, f"{score:.4f}"] 
               for i, (term, score) in enumerate(zip(top_20['term'], top_20['summed_tfidf_score']))]
@@ -107,12 +107,12 @@ table = ax.table(cellText=table_data,
                 colWidths=[0.15, 0.5, 0.35])
 
 table.auto_set_font_size(False)
-table.set_fontsize(12)
+table.set_fontsize(20)
 table.scale(1, 2.5)
 
 for i in range(3):
     table[(0, i)].set_facecolor('skyblue')
-    table[(0, i)].set_text_props(weight='bold', fontsize=13)
+    table[(0, i)].set_text_props(weight='bold', fontsize=24)
 
 plt.tight_layout()
 plt.savefig('tfidf_top_20_table.png', dpi=300, bbox_inches='tight')
@@ -136,10 +136,10 @@ wordcloud = WordCloud(
     height=400
 ).generate_from_frequencies(word_freq_dict)
 
-plt.figure(figsize=(12, 6))
+plt.figure(figsize=(16, 12))
 plt.imshow(wordcloud, interpolation='bilinear')
 plt.axis("off")
-plt.title("Most Important Terms - TF-IDF Wordcloud (Top 100)", fontsize=14, fontweight='bold')
+plt.title("Most Important Terms - TF-IDF Wordcloud (Top 100)", fontsize=32, fontweight='bold')
 plt.tight_layout()
 plt.savefig('tfidf_wordcloud.png', dpi=300, bbox_inches='tight')
 print("Saved: tfidf_wordcloud.png")

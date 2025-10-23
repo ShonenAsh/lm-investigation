@@ -93,20 +93,20 @@ for tg in [t for t, _ in top_trigrams]:
 
 # Create visualizations
 def create_table(data, title, filename):
-    fig, ax = plt.subplots(figsize=(10, 10))
+    fig, ax = plt.subplots(figsize=(16, 12))
     ax.axis('off')
-    fig.suptitle(title, fontsize=16, fontweight='bold', y=0.98)
+    fig.suptitle(title, fontsize=32, fontweight='bold', y=0.98)
     
     table_data = [[f"{i+1}", term, f"{prob:.6f}"] for i, (term, prob) in enumerate(data)]
     table = ax.table(cellText=table_data, colLabels=['Rank', 'N-gram', 'Probability'],
                     cellLoc='left', loc='center', colWidths=[0.15, 0.55, 0.3])
     table.auto_set_font_size(False)
-    table.set_fontsize(12)
+    table.set_fontsize(20)
     table.scale(1, 2.5)
     
     for i in range(3):
         table[(0, i)].set_facecolor('skyblue')
-        table[(0, i)].set_text_props(weight='bold', fontsize=13)
+        table[(0, i)].set_text_props(weight='bold', fontsize=24)
     
     plt.tight_layout()
     plt.savefig(filename, dpi=300, bbox_inches='tight')

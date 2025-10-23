@@ -47,7 +47,7 @@ plot_data = pd.DataFrame({
 })
 
 # Set up the figure and axis
-plt.figure(figsize=(12, 8))
+plt.figure(figsize=(16, 12))
 
 # Define colors to match other visualizations
 color_map = {'Human': 'skyblue', 'Dolphin-Mistral': 'coral', 'Gemma3_4b': 'lightgreen'}
@@ -61,12 +61,12 @@ bars = sns.barplot(x='Author Type', y='Grade Level', data=plot_data, palette=col
 for i, bar in enumerate(bars.patches):
     height = bar.get_height()
     plt.text(bar.get_x() + bar.get_width()/2., height + 0.1,
-            f'{height:.2f}', ha='center', va='bottom', fontsize=11)
+            f'{height:.2f}', ha='center', va='bottom', fontsize=20)
 
 # Add labels, title, and customize appearance
-plt.xlabel('Author Type', fontsize=12)
-plt.ylabel('Grade Level', fontsize=12)
-plt.title('Average Grade Levels by Author Type for AITA Posts', fontsize=14, fontweight='bold')
+plt.xlabel('Author Type', fontsize=24)
+plt.ylabel('Grade Level', fontsize=24)
+plt.title('Average Grade Levels by Author Type for AITA Posts', fontsize=32, fontweight='bold')
 plt.ylim(bottom=0)  # Ensure y-axis starts at 0
 plt.grid(axis='y', linestyle='--', alpha=0.3)
 
