@@ -1,33 +1,45 @@
+import sys
 import pandas as pd
 import polars as pl
 import pybiber as pb
 import spacy as sp
 from convokit import Corpus, download
 
-START_OFFSET = 0
-N_POSTS = 5000
+# Last 5000 prefered because the deleted posts are in the beginning
+START_OFFSET = -5000
+N_POSTS = 5000 
 
-# Extract subreddit prompts (only for human/original data)
-def prepare_prompts(subreddit):
+def prep_prompts(subreddit, only_utterances=False):
+    """ Extracts post titles and text by performing a join 
+        on conversations and utterances from a convokit subreddit
+    
+    Keyword arguments:
+        only_utterances -- returns text only from utterances dataframe
+    """
     corpus = Corpus(download(f"subreddit-{subreddit}"))
     print(corpus.print_summary_stats())
     conv_df = corpus.get_conversations_dataframe()
     utt_df = corpus.get_utterances_dataframe()
     prompt_list = []
     id_list = []
-    print(f"Posts: {START_OFFSET} - END")
-    for row in conv_df.iloc[START_OFFSET: START_OFFSET + N_POSTS].itertuples():
-        og_utt_text = row[2] + " " + utt_df[utt_df.index == row.Index]["text"].iloc[0]
-        prompt_list.append(og_utt_text)
-        id_list.append(row.Index)
 
-    #for row in utt_df.iloc[START_OFFSET:].itertuples():
-    #    prompt_list.append(row.text)
-    #    id_list.append(row.Index)
+    if only_utterances:
+        print(f"Utterances: {START_OFFSET} - END")
+        for row in utt_df.iloc[START_OFFSET:].itertuples():
+            prompt_list.append(row.text)
+            id_list.append(row.Index)
+    else:
+        print(f"Posts: {START_OFFSET} - END")
+        for row in conv_df.iloc[START_OFFSET:].itertuples():
+            og_utt_text = row[2] + " " + utt_df[utt_df.index == row.Index]["text"].iloc[0]
+            prompt_list.append(og_utt_text)
+            id_list.append(row.Index)
+
     return id_list, prompt_list
 
-# Apply pybiber's processing to obtain 67 Biber features
 def calculate_biber_features(corpus_df: pl.DataFrame) -> pl.DataFrame:
+    """Apply pybiber's processing and returns 67 Biber features"""
+
     nlp_model = sp.load("en_core_web_sm", disable=["ner"])
     pb_processor = pb.CorpusProcessor()
     tokens_df = pb_processor.process_corpus(corpus_df, nlp_model)
@@ -35,11 +47,13 @@ def calculate_biber_features(corpus_df: pl.DataFrame) -> pl.DataFrame:
 
     return features_df
 
-# Helper function to rename columns for PyBibr processing
-# Also drops any additional columns if provided (required).
 def prep_columns_pybiber(
     corpus_df: pl.DataFrame | pd.DataFrame, id_col: str, text_col: str
 ) -> pl.DataFrame:
+    """ Helper function to rename columns for PyBibr processing
+        Also drops any additional columns if provided (required).
+    """
+
     if isinstance(corpus_df, pd.DataFrame):
         corpus_df = corpus_df.reset_index()
         corpus_df = pl.from_pandas(corpus_df)
@@ -55,17 +69,24 @@ def prep_columns_pybiber(
 
 
 def main():
-    #corpus = Corpus(download("subreddit-PewdiepieSubmissions"))
-    #utt_df: pd.DataFrame = corpus.get_utterances_dataframe().iloc[:5000]
+    if len(sys.argv) != 3:
+        print("Usage $python biber_features.py <convokit-subreddit | text_input.csv> <biber_features_output.csv>")
+        exit(-1)
     
-    ids, prompt_lists = prepare_prompts("flatearth")
-    utt_df = pl.DataFrame({"id": ids, "text": prompt_lists})
+    args = sys.argv
+    
+    if ".csv" in args[1]:
+        utt_df = pl.read_csv(args[1])
+        df = prep_columns_pybiber(utt_df, "id", "ai_response")
+    else:
+        ids, prompt_lists = prep_prompts(args[1])
+        utt_df = pl.DataFrame({"id": ids, "text": prompt_lists})
+        df = prep_columns_pybiber(utt_df, "id", "text")
 
-    #utt_df = pl.read_csv('./data/p2/human_pewds_engagement.csv')
-    df = prep_columns_pybiber(utt_df, "id", "text")
     print(df.head())
     res = calculate_biber_features(df)
-    res.write_csv("./data/p2/human_flatearth_biber_features.csv")
+    res.write_csv(args[2])
+    print(f"Successfully written biber features to {args[2]}")
 
 
 if __name__ == "__main__":
